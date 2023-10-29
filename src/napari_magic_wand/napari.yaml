@@ -1,0 +1,10 @@
+name: napari-magic-wand
+display_name: Magic wand
+contributions:
+  commands:
+    - id: napari-magic-wand.wire
+      title: Magic wand
+      python_name: napari_magic_wand:LiveWireWidget
+  widgets:
+    - command: napari-magic-wand.wire
+      display_name: Magic wand
