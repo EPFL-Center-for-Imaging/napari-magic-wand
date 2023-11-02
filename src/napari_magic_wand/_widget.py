@@ -9,6 +9,7 @@ from qtpy.QtWidgets import (
     QGridLayout, 
     QPushButton,
     QCheckBox,
+    QDoubleSpinBox,
 )
 import scipy.ndimage as ndi
 import pyift.livewire
@@ -54,10 +55,23 @@ class LiveWireWidget(QWidget):
         self.auto_fill_objects_cb.setChecked(True)
         grid_layout.addWidget(self.auto_fill_objects_cb, 3, 1)
 
+        self.sigma_spinbox = QDoubleSpinBox()
+        self.sigma_min = 0
+        self.sigma_max = 250
+        self.sigma_step = 5
+        self.sigma_spinbox.setMinimum(self.sigma_min)
+        self.sigma_spinbox.setMaximum(self.sigma_max)
+        self.sigma_spinbox.setSingleStep(self.sigma_step)
+        self.sigma_spinbox.setValue(5.0)
+        # self.sigma_spinbox.valueChanged.connect(self._on_escape)
+        self.sigma_spinbox.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        grid_layout.addWidget(QLabel("Sigma", self), 4, 0)
+        grid_layout.addWidget(self.sigma_spinbox, 4, 1)
+
         # Push button
         self.btn = QPushButton('Start live wire (s)', self)
         self.btn.clicked.connect(self._on_button_push)
-        grid_layout.addWidget(self.btn, 4, 0, 1, 2)
+        grid_layout.addWidget(self.btn, 5, 0, 1, 2)
 
         # Setup layer callbacks
         self.viewer.layers.events.inserted.connect(
@@ -70,17 +84,25 @@ class LiveWireWidget(QWidget):
 
         # Key bindings
         self.viewer.bind_key('s', lambda _: self._on_button_push())
+        self.viewer.bind_key('Up', lambda _: self._increment_sigma(self.sigma_step))
+        self.viewer.bind_key('Down', lambda _: self._increment_sigma(-self.sigma_step))
         self.viewer.bind_key('Escape', self._on_escape)
 
         # Viewer events
         self.viewer.dims.events.order.connect(self._on_dimensions_changed)
         self.viewer.dims.events.ndisplay.connect(self._on_dimensions_changed)
+
+        import skimage.data; self.viewer.add_image(skimage.data.coins())
     
     def _check_image_layer_removed(self, e):
         if self.image_layer == e.value:
             # Reset everything if the user deleted the image layer
             self._handle_inactive()
 
+    @property
+    def sigma(self):
+        return self.sigma_spinbox.value()
+    
     @property
     def image_data(self):
         """The image data, adjusted to handle the RGB case."""
@@ -202,7 +224,7 @@ class LiveWireWidget(QWidget):
         self.labels_layer.mouse_double_click_callbacks.append(self._on_press_finish_key)
         
         # Create the wire
-        self.wire = pyift.livewire.LiveWire(image=self.image_data_slice, sigma=1.0)
+        self.wire = pyift.livewire.LiveWire(image=self.image_data_slice, sigma=self.sigma)
 
         # Viewer callback
         self.viewer.cursor.events.position.connect(self._on_cursor_move)
@@ -214,6 +236,17 @@ class LiveWireWidget(QWidget):
         self.viewer.text_overlay.visible = True
         self.viewer.text_overlay.text = 'Double-click to close the object selection.'
 
+    def _increment_sigma(self, increment):
+        if not self.is_active:
+            return
+        
+        new_value = self.sigma_spinbox.value() + increment
+        if (new_value > self.sigma_max) | (new_value < self.sigma_max):
+            return
+        
+        self.sigma_spinbox.setValue(new_value)
+        self.wire.sigma = new_value
+    
     def _handle_inactive(self):
         self.is_active = False
 
@@ -242,7 +275,7 @@ class LiveWireWidget(QWidget):
         if self.image_data is None:
             return
         
-        self.wire = pyift.livewire.LiveWire(image=self.image_data_slice, sigma=1.0)
+        self.wire = pyift.livewire.LiveWire(image=self.image_data_slice, sigma=self.sigma)
     
     def _on_press_finish_key(self, source_layer, e):
         if self.is_in_3d_view:
@@ -273,7 +306,7 @@ class LiveWireWidget(QWidget):
         if self.check_label_increment.isChecked():
             self.selected_label += 1
 
-        self.wire = pyift.livewire.LiveWire(image=self.image_data_slice, sigma=1.0)
+        self.wire = pyift.livewire.LiveWire(image=self.image_data_slice, sigma=self.sigma)
 
     def _on_cursor_move(self, e):
         if self.is_in_3d_view:
@@ -316,4 +349,4 @@ class LiveWireWidget(QWidget):
         if self.is_in_3d_view:
             return
         
-        self.wire = pyift.livewire.LiveWire(image=self.image_data_slice, sigma=1.0)
+        self.wire = pyift.livewire.LiveWire(image=self.image_data_slice, sigma=self.sigma)
