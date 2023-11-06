@@ -92,7 +92,7 @@ class LiveWireWidget(QWidget):
         self.viewer.dims.events.order.connect(self._on_dimensions_changed)
         self.viewer.dims.events.ndisplay.connect(self._on_dimensions_changed)
 
-        import skimage.data; self.viewer.add_image(skimage.data.coins())
+        # import skimage.data; self.viewer.add_image(skimage.data.coins())
     
     def _check_image_layer_removed(self, e):
         if self.image_layer == e.value:
@@ -234,7 +234,7 @@ class LiveWireWidget(QWidget):
         
         # Viewer text overlay
         self.viewer.text_overlay.visible = True
-        self.viewer.text_overlay.text = 'Double-click to close the object selection.'
+        self.viewer.text_overlay.text = 'Double-click to confirm the object selection.'
 
     def _increment_sigma(self, increment):
         if not self.is_active:
