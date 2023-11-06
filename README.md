@@ -20,7 +20,12 @@ You can install `napari-magic-wand` via [pip]:
 - Open an image to annotate (2D, 2D+t, or 3D).
 - Click on the button "Start live wire" or press `S`. A new `Labels` layer *Live wire (current edit)* should appear.
 - With the *Live wire* layer selected, click on the image to annotate the contour of an object.
-- Double-click to confirm the annotation path and fill the inside of the annotated object.
+- Double-click to confirm the annotation path.
+
+**Options and parameters**
+- *Close and fill objects*: You can fill (or not) the inside of the annotated object. Do not tick this option if you are annotating **paths** (e.g. filament-like strucutres).
+- *Auto-increment label index*: Tick this option to increment the label index every time a new object is completed (e.g. if you are annotating multiple objects).
+- *Sigma*: Higher values of sigma increase the "stickiness" of the object boundaries to the magic wand.
 
 ## Contributing
 
