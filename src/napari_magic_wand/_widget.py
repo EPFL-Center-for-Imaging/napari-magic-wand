@@ -71,7 +71,7 @@ class LiveWireWidget(QWidget):
         grid_layout.addWidget(self.sigma_spinbox, 4, 1)
 
         # Push button
-        self.btn = QPushButton('Start live wire (s)', self)
+        self.btn = QPushButton('Start live wire', self)
         self.btn.clicked.connect(self._on_button_push)
         grid_layout.addWidget(self.btn, 5, 0, 1, 2)
 
@@ -85,7 +85,6 @@ class LiveWireWidget(QWidget):
         self._on_layer_change(None)
 
         # Key bindings
-        self.viewer.bind_key('s', lambda _: self._on_button_push())
         self.viewer.bind_key('Up', lambda _: self._increment_sigma(self.sigma_step))
         self.viewer.bind_key('Down', lambda _: self._increment_sigma(-self.sigma_step))
         self.viewer.bind_key('Escape', self._on_escape)
@@ -232,7 +231,7 @@ class LiveWireWidget(QWidget):
         self.viewer.cursor.events.position.connect(self._on_cursor_move)
         
         # Update the button text
-        self.btn.setText('Stop live wire (s)')
+        self.btn.setText('Stop live wire')
         
         # Viewer text overlay
         self.viewer.text_overlay.visible = True
