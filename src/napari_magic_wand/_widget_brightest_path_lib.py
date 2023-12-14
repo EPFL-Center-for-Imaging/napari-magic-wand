@@ -73,9 +73,6 @@ class BrightestPathWidget(QWidget):
         self.viewer.layers.events.removed.connect(self._on_image_layer_removed)
         self._on_layer_change(None)
 
-        # Bind keys
-        self.viewer.bind_key('Escape', self._on_escape)
-
         # import skimage.data; self.viewer.add_image(skimage.data.coins())
         # import skimage.data; self.viewer.add_image(skimage.data.brain())
 
@@ -197,6 +194,9 @@ class BrightestPathWidget(QWidget):
         self.labels_layer.mouse_drag_callbacks.append(self._on_mouse_click)
         self.labels_layer.mouse_double_click_callbacks.append(self._on_press_finish_key)
 
+        # Bind keys
+        self.viewer.bind_key('Escape', self._on_escape, overwrite=True)
+
         self.viewer.cursor.events.position.connect(self._on_cursor_move)
         self.btn.setText('Stop live wire')
         self.viewer.text_overlay.visible = True
@@ -212,6 +212,10 @@ class BrightestPathWidget(QWidget):
             if layer.name == 'Live wire (current edit)':
                 self.viewer.layers.pop(idx)
 
+        # Remove the viewer key bindings
+        if 'Escape' in self.viewer.keymap:
+            self.viewer.keymap.pop('Escape')
+        
         self.viewer.cursor.events.position.disconnect(self._on_cursor_move)
         self.btn.setText('Start live wire')
         self.viewer.text_overlay.visible = False
