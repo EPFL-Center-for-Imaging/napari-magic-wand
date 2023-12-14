@@ -23,6 +23,7 @@ class LiveWireWidget(QWidget):
         super().__init__()
 
         self.viewer = napari_viewer
+        self.viewer.text_overlay.text = 'Double-click to confirm the selection.'
 
         self.image_layer = None
         self.labels_layer = None
@@ -235,7 +236,6 @@ class LiveWireWidget(QWidget):
         
         # Viewer text overlay
         self.viewer.text_overlay.visible = True
-        self.viewer.text_overlay.text = 'Double-click to confirm the object selection.'
 
     def _increment_sigma(self, increment):
         if not self.is_active:

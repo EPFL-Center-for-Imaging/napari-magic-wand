@@ -1,12 +1,22 @@
 # 🪄 napari-magic-wand
 
-Object annotation in Napari using a *magic wand* (shortest path algorithm). This plugin is based on the [PyIFT](https://github.com/PyIFT/pyift) library. This tool supports annotation in 2D (grayscale and RGB), 2D+t (grayscale, frame by frame) and 3D images (slice by slice). It can be used to annotate **paths** or solid objects via their contour.
+Object annotation in Napari using *magic wands* (shortest path algorithms). This plugin supports annotation in 2D (grayscale and RGB), 2D+t (grayscale, frame by frame) and 3D images (slice by slice). It can be used to annotate **paths** or the contour of solid objects.
+
+The plugin provides two annotation functions:
+
+- The **Magic wand** tool is based on the [PyIFT](https://github.com/PyIFT/pyift) library. Use it to trace annotations that follow the **intensity gradients** in the image.
+- The **Brightest path** tool is based on the [Brightest Path Lib](https://github.com/mapmanager/brightest-path-lib) library. Use it to trace annotations that follow **the brightest (or darkest) path** between two points.
 
 <p align="center">
     <img src="https://github.com/MalloryWittwer/napari-magic-wand/blob/main/assets/screenshot.gif" height="400">
 </p>
 
-Please also take a look at the [grabber-ift](https://www.napari-hub.org/plugins/grabber-ift) plugin, which offers similar functionality but slightly different user interactions.
+**Related plugins**
+
+Take a look at these related plugins that offer similar functionality and slightly different user interactions.
+
+- [grabber-ift](https://www.napari-hub.org/plugins/grabber-ift) which is based on *pyift*.
+- [napari-tracing](https://github.com/mapmanager/napari-tracing) which is based on *brightest-path-lib*.
 
 ## Installation
 
@@ -16,16 +26,17 @@ You can install `napari-magic-wand` via [pip]:
 
 ## Usage
 
-- Select the plugin from the `Plugins` menu of Napari.
+- Select the tool of your choice from the `Plugins` menu of Napari.
 - Open an image to annotate (2D, 2D+t, or 3D).
-- Click on the button "Start live wire" or press `S`. A new `Labels` layer *Live wire (current edit)* should appear.
-- With the *Live wire* layer selected, click on the image to annotate the contour of an object.
-- Double-click to confirm the annotation path.
+- Click on the button "Start live wire". A new `Labels` layer *Live wire (current edit)* should appear.
+- Click on the image to annotate paths interactively.
+- Double-click to confirm an annotation and move to the next.
 
 **Options and parameters**
 - *Close and fill objects*: You can fill (or not) the inside of the annotated object. Do not tick this option if you are annotating **paths** (e.g. filament-like strucutres).
 - *Auto-increment label index*: Tick this option to increment the label index every time a new object is completed (e.g. if you are annotating multiple objects).
 - *Sigma*: Higher values of sigma increase the "stickiness" of the object boundaries to the magic wand.
+- *Black ridges*: Tick this checkbox if you are annotating dark paths on a bright background.
 
 ## Contributing
 

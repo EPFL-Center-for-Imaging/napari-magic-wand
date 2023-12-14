@@ -14,7 +14,6 @@ from qtpy.QtWidgets import (
 from brightest_path_lib.algorithm import AStarSearch
 
 import numpy as np
-from napari.utils.notifications import show_info
 
 
 class BrightestPathWidget(QWidget):
@@ -22,13 +21,12 @@ class BrightestPathWidget(QWidget):
         super().__init__()
 
         self.viewer = napari_viewer
-        self.viewer.text_overlay.text = 'Double-click to confirm the object selection.'
+        self.viewer.text_overlay.text = 'Double-click to confirm the selection.'
 
         # Initial state
         self.image_layer = None
         self.labels_layer = None
         self.result_layer = None
-        self.wire = None
         self.is_active = False
         self.current_start_point = None
 
@@ -161,6 +159,7 @@ class BrightestPathWidget(QWidget):
     
     def _on_image_layer_removed(self, e):
         if self.image_layer == e.value:
+            self.is_active = False
             self._handle_inactive()
 
     def _on_layer_change(self, e):
@@ -176,11 +175,7 @@ class BrightestPathWidget(QWidget):
                 self.cb_result.addItem(x.name, x.data)
 
     def _on_button_push(self):
-        if self.cb_image.currentText() == '':
-            return
-        
-        if self.is_in_3d_view:
-            show_info('Please be in 2D view mode!')
+        if (self.is_in_3d_view) | (self.cb_image.currentText() == ''):
             return
         
         self.image_layer = self.viewer.layers[self.cb_image.currentText()]
@@ -190,7 +185,7 @@ class BrightestPathWidget(QWidget):
         else:
             self.result_layer = self.viewer.layers[self.cb_result.currentText()]
         
-        self.is_active = not self.is_active  # Handle that with a button setter?
+        self.is_active = not self.is_active
 
         if self.is_active:
             self._handle_active()
@@ -198,29 +193,18 @@ class BrightestPathWidget(QWidget):
             self._handle_inactive()
         
     def _handle_active(self):
-        self.is_active = True
-
-        # Create a Labels layer
         self.labels_layer = self.viewer.add_labels(np.zeros_like(self.image_data, dtype=np.int_), name='Live wire (current edit)')
         self.labels_layer.mouse_drag_callbacks.append(self._on_mouse_click)
         self.labels_layer.mouse_double_click_callbacks.append(self._on_press_finish_key)
 
-        # Viewer callback
         self.viewer.cursor.events.position.connect(self._on_cursor_move)
-        
-        # Update the button text
         self.btn.setText('Stop live wire')
-        
-        # Viewer text overlay
         self.viewer.text_overlay.visible = True
 
     def _handle_inactive(self):
-        self.is_active = False
-
-        # Remove the Labels layer
         if self._on_mouse_click in self.labels_layer.mouse_drag_callbacks:
             self.labels_layer.mouse_drag_callbacks.remove(self._on_mouse_click)
-
+        
         if self._on_press_finish_key in self.labels_layer.mouse_double_click_callbacks:
             self.labels_layer.mouse_double_click_callbacks.remove(self._on_press_finish_key)
 
@@ -228,20 +212,12 @@ class BrightestPathWidget(QWidget):
             if layer.name == 'Live wire (current edit)':
                 self.viewer.layers.pop(idx)
 
-        # Viewer callback
         self.viewer.cursor.events.position.disconnect(self._on_cursor_move)
-        
-        # Update the button text
         self.btn.setText('Start live wire')
-
-        # Viewer text overlay
         self.viewer.text_overlay.visible = False
 
     def _on_press_finish_key(self, source_layer, e):
-        if self.is_in_3d_view:
-            return
-        
-        if self.labels_layer is None:
+        if (self.is_in_3d_view) | (self.labels_layer is None):
             return
         
         if self.check_label_increment.isChecked():
@@ -250,10 +226,7 @@ class BrightestPathWidget(QWidget):
         self.current_start_point = None
 
     def _on_cursor_move(self, event):
-        if self.is_in_3d_view:
-            return
-        
-        if (self.current_start_point is None):
+        if (self.is_in_3d_view) | (self.current_start_point is None):
             return
         
         goal_point = self._event_position(event.value)
