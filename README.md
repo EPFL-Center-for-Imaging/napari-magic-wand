@@ -1,3 +1,4 @@
+![EPFL Center for Imaging logo](https://imaging.epfl.ch/resources/logo-for-gitlab.svg)
 # 🪄 napari-magic-wand
 
 Object annotation in Napari using *magic wands* (shortest path algorithms). This plugin supports annotation in 2D (grayscale and RGB), 2D+t (grayscale, frame by frame) and 3D images (slice by slice). It can be used to annotate **paths** or the contour of solid objects.
@@ -17,6 +18,7 @@ Take a look at these related plugins that offer similar functionality and slight
 
 - [grabber-ift](https://www.napari-hub.org/plugins/grabber-ift) which is based on *pyift*.
 - [napari-tracing](https://github.com/mapmanager/napari-tracing) which is based on *brightest-path-lib*.
+
 
 ## Installation
 
