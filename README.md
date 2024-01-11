@@ -6,12 +6,13 @@ Object annotation in Napari using *magic wands* (shortest path algorithms). This
 The plugin provides two annotation functions:
 
 - The **Magic wand** tool is based on the [PyIFT](https://github.com/PyIFT/pyift) library. Use it to trace annotations that follow the **intensity gradients** in the image.
-- The **Brightest path** tool is based on the [Brightest Path Lib](https://github.com/mapmanager/brightest-path-lib) library. Use it to trace annotations that follow **the brightest (or darkest) path** between two points.
 
 <p align="center">
     <img src="https://github.com/EPFL-Center-for-Imaging/napari-magic-wand/blob/main/assets/screenshot.gif" height="400">
 </p>
 
+- The **Brightest path** tool is based on the [Brightest Path Lib](https://github.com/mapmanager/brightest-path-lib) library. Use it to trace annotations that follow **the brightest (or darkest) path** between two points.
+- 
 <p align="center">
     <img src="https://github.com/EPFL-Center-for-Imaging/napari-magic-wand/blob/main/assets/tracing.gif" height="400">
 </p>
