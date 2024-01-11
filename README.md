@@ -9,7 +9,11 @@ The plugin provides two annotation functions:
 - The **Brightest path** tool is based on the [Brightest Path Lib](https://github.com/mapmanager/brightest-path-lib) library. Use it to trace annotations that follow **the brightest (or darkest) path** between two points.
 
 <p align="center">
-    <img src="https://github.com/MalloryWittwer/napari-magic-wand/blob/main/assets/screenshot.gif" height="400">
+    <img src="https://github.com/EPFL-Center-for-Imaging/napari-magic-wand/blob/main/assets/screenshot.gif" height="400">
+</p>
+
+<p align="center">
+    <img src="https://github.com/EPFL-Center-for-Imaging/napari-magic-wand/blob/main/assets/tracing.gif" height="400">
 </p>
 
 **Related plugins**
@@ -52,6 +56,10 @@ Distributed under the terms of the [BSD-3] license,
 ## Issues
 
 If you encounter any problems, please file an issue along with a detailed description.
+
+## Authors
+
+This tool is being developed by the [EPFL Center for Imaging](https://imaging.epfl.ch/) as part of a collaborative project with the [Laboratory of Hydraulic Constructions](https://www.epfl.ch/labs/lch/). 
 
 ----------------------------------
 
